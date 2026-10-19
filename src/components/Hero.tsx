@@ -1,22 +1,104 @@
-import React from 'react';
-import { ShoppingBag, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ShoppingBag, ArrowRight, Clock, Flame } from 'lucide-react';
 import { YarnBallIcon, CrochetHookIcon, WoodenButtonIcon } from './CrochetIcons';
+import type { Product } from '../types';
 
 interface HeroProps {
   onExploreClick: () => void;
   onShopClick: () => void;
+  specials?: Product[];
+  onSelectProduct: (p: Product) => void;
 }
 
 export const Hero: React.FC<HeroProps> = ({
   onExploreClick,
-  onShopClick
+  onShopClick,
+  specials = [],
+  onSelectProduct
 }) => {
-  return (
-    <section className="relative overflow-hidden pt-12 pb-16 border-b-2 border-dashed border-pink-500/20 bg-gradient-to-b from-[#12101b] via-[#0f0e18] to-[#0c0b14]">
-      {/* Subtle yarn fiber glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[650px] h-72 bg-gradient-to-r from-pink-600/10 via-purple-600/10 to-amber-600/10 blur-[110px] pointer-events-none" />
+  // Live countdown timer for the special item
+  const [timeLeft, setTimeLeft] = useState<{ hours: number; minutes: number; seconds: number }>({
+    hours: 47,
+    minutes: 59,
+    seconds: 59
+  });
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev.seconds > 0) {
+          return { ...prev, seconds: prev.seconds - 1 };
+        } else if (prev.minutes > 0) {
+          return { ...prev, minutes: 59, seconds: 59 };
+        } else if (prev.hours > 0) {
+          return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
+        }
+        return prev;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const featuredSpecial = specials[0];
+
+  return (
+    <section className="relative overflow-hidden pt-10 pb-16 border-b-2 border-dashed border-pink-500/20 bg-gradient-to-b from-[#12101b] via-[#0f0e18] to-[#0c0b14]">
+      {/* Subtle yarn fiber glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-72 bg-gradient-to-r from-pink-600/10 via-purple-600/10 to-amber-600/10 blur-[110px] pointer-events-none" />
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10 space-y-8">
+        
+        {/* ======================================================== */}
+        {/* LIMITED TIME SPECIALS BANNER IN HERO                     */}
+        {/* ======================================================== */}
+        {featuredSpecial && (
+          <div className="w-full rounded-2xl bg-gradient-to-r from-pink-950/60 via-[#181226] to-purple-950/60 border-2 border-dashed border-pink-400/50 p-3 sm:p-4 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3 text-center md:text-left">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-600 to-amber-500 flex items-center justify-center text-white flex-shrink-0 shadow-md">
+                <Flame className="w-5 h-5 text-white animate-bounce" />
+              </div>
+              <div>
+                <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
+                  <span className="text-[10px] font-crochet font-extrabold uppercase px-2 py-0.5 rounded-full bg-pink-500 text-white tracking-wide shadow-sm">
+                    {featuredSpecial.badge || 'Limited Time Special'}
+                  </span>
+                  <span className="text-xs text-amber-300 font-crochet font-bold">
+                    {featuredSpecial.specialDiscountText || 'Exclusive Drop'}
+                  </span>
+                </div>
+                <h4 className="text-sm sm:text-base font-crochet font-bold text-white mt-0.5 line-clamp-1">
+                  {featuredSpecial.name}
+                </h4>
+              </div>
+            </div>
+
+            {/* Live Countdown & Quick Claim Button */}
+            <div className="flex items-center gap-3 flex-shrink-0">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/60 border border-dashed border-pink-400/30 text-xs font-mono font-bold text-pink-300 shadow-inner">
+                <Clock className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+                <span>
+                  {String(timeLeft.hours).padStart(2, '0')}:
+                  {String(timeLeft.minutes).padStart(2, '0')}:
+                  {String(timeLeft.seconds).padStart(2, '0')}
+                </span>
+                <span className="text-[10px] text-gray-400 uppercase font-crochet">Left</span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => onSelectProduct(featuredSpecial)}
+                className="px-4 py-2 rounded-xl bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white text-xs font-crochet font-bold shadow-md shadow-pink-600/30 border border-dashed border-pink-300/40 transition-all active:scale-95 cursor-pointer flex items-center gap-1.5"
+              >
+                <span>Claim Special (${featuredSpecial.price.toFixed(2)})</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ======================================================== */}
+        {/* MAIN HERO GRID                                          */}
+        {/* ======================================================== */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           
           {/* Main Hero Copy */}
@@ -27,7 +109,7 @@ export const Hero: React.FC<HeroProps> = ({
               <YarnBallIcon className="w-4 h-4 text-pink-400" />
               <span>Freehand Amigurumi & Official Merch</span>
               <span className="text-pink-400/50">•</span>
-              <span className="text-amber-300 font-script">Zero Patterns</span>
+              <span className="text-amber-300 font-script">Zero Patterns Used</span>
             </div>
 
             {/* Headline */}
@@ -84,9 +166,9 @@ export const Hero: React.FC<HeroProps> = ({
               <div className="p-2.5 rounded-xl bg-white/[0.03] border border-dashed border-amber-400/20 text-center lg:text-left">
                 <div className="flex items-center gap-1.5 justify-center lg:justify-start">
                   <WoodenButtonIcon className="w-3.5 h-3.5 text-amber-400" />
-                  <span className="text-xs font-crochet font-bold text-white">Custom Orders</span>
+                  <span className="text-xs font-crochet font-bold text-white">Direct Review</span>
                 </div>
-                <div className="text-[11px] text-gray-400 font-script">Any wrestler gear</div>
+                <div className="text-[11px] text-gray-400 font-script">IG & WhatsApp</div>
               </div>
             </div>
 
@@ -140,6 +222,7 @@ export const Hero: React.FC<HeroProps> = ({
           </div>
 
         </div>
+
       </div>
     </section>
   );

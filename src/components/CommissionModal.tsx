@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { X, Sparkles, Copy, Check, ExternalLink, Trophy } from 'lucide-react';
+import { X, Sparkles, Check, ExternalLink, Trophy } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { InstagramIcon } from './InstagramIcon';
+import { WhatsAppIcon } from './WhatsAppIcon';
 import { CrochetHookIcon, YarnBallIcon } from './CrochetIcons';
 import { sounds } from '../utils/audio';
 
@@ -16,23 +17,25 @@ export const CommissionModal: React.FC<CommissionModalProps> = ({ isOpen, onClos
   const [gearDetails, setGearDetails] = useState('');
   const [hasBelt, setHasBelt] = useState(false);
   const [beltName, setBeltName] = useState('');
-  const [props, setProps] = useState('');
+  const [specialProps, setSpecialProps] = useState('');
   const [clientInstagram, setClientInstagram] = useState('');
+  const [clientPhone, setClientPhone] = useState('');
   const [copied, setCopied] = useState(false);
 
   if (!isOpen) return null;
 
-  const generatedDmText = `Hi Hazel! 🪡✨ I love your custom wrestling crochet dolls on Instagram (@hazel_the_dollmaker).
+  const generatedDmText = `Hi Hazel! 🪡✨ I love your custom wrestling crochet dolls (@hazel_the_dollmaker).
 
 I'd love to inquire about commissioning a custom doll:
 • Wrestler: ${wrestlerName || '[Wrestler Name]'}
 • Promotion / Circuit: ${promotion || '[Promotion]'}
 • Ring Gear / Attire: ${gearDetails || '[Describe gear, colors, boots]'}
 ${hasBelt ? `• Championship Belt: Yes (${beltName || 'Title Belt'})` : '• Championship Belt: None'}
-${props ? `• Special Props / Accessories: ${props}` : ''}
+${specialProps ? `• Special Props / Accessories: ${specialProps}` : ''}
 • My Instagram: ${clientInstagram || '@your_instagram'}
+${clientPhone ? `• WhatsApp / Phone: ${clientPhone}` : ''}
 
-Please let me know your current availability and commission details. Thank you for your amazing art!`;
+Please let me know your current availability, payment options, and commission details. Thank you for your amazing art!`;
 
   const handleCopyAndOpenInstagram = () => {
     navigator.clipboard.writeText(generatedDmText);
@@ -47,6 +50,17 @@ Please let me know your current availability and commission details. Thank you f
     setTimeout(() => {
       window.open('https://www.instagram.com/hazel_the_dollmaker/', '_blank');
     }, 600);
+  };
+
+  const handleOpenWhatsApp = () => {
+    const encoded = encodeURIComponent(generatedDmText);
+    sounds.playLikeChime();
+    confetti({
+      particleCount: 60,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+    window.open(`https://wa.me/?text=${encoded}`, '_blank');
   };
 
   return (
@@ -65,7 +79,7 @@ Please let me know your current availability and commission details. Thank you f
                 <Sparkles className="w-4 h-4 text-pink-400" />
               </h2>
               <p className="text-xs text-pink-300 font-script">
-                Direct DM Commission Format for @hazel_the_dollmaker
+                Direct Review & Commission Format for @hazel_the_dollmaker
               </p>
             </div>
           </div>
@@ -77,11 +91,11 @@ Please let me know your current availability and commission details. Thank you f
           </button>
         </div>
 
-        {/* Instructions banner */}
+        {/* Instructions banner with WhatsApp & Instagram badges */}
         <div className="p-3.5 rounded-2xl bg-black/40 border border-dashed border-pink-400/30 text-xs text-pink-200 flex items-center gap-2.5 font-script">
-          <InstagramIcon className="w-4 h-4 text-pink-400 flex-shrink-0" />
+          <YarnBallIcon className="w-4 h-4 text-pink-400 flex-shrink-0" />
           <span>
-            Hazel accepts custom requests directly via Instagram DM. Fill in the details below to generate a formatted commission message ready to send!
+            Hazel reviews all custom requests personally to verify gear colors, championship belts, and payment options. Generate your details and send directly via Instagram or WhatsApp:
           </span>
         </div>
 
@@ -102,7 +116,7 @@ Please let me know your current availability and commission details. Thank you f
             </div>
             <div>
               <label className="block text-xs font-bold text-gray-300 mb-1">
-                Wrestling Promotion / League
+                Wrestling Promotion / Circuit
               </label>
               <input
                 type="text"
@@ -138,7 +152,7 @@ Please let me know your current availability and commission details. Thank you f
               />
               <span className="text-xs font-bold text-white flex items-center gap-1.5">
                 <Trophy className="w-3.5 h-3.5 text-amber-400" />
-                <span>Include Custom Handcrafted Title Belt?</span>
+                <span>Include Custom Handcrafted Miniature Title Belt?</span>
               </span>
             </label>
 
@@ -153,23 +167,25 @@ Please let me know your current availability and commission details. Thank you f
             )}
           </div>
 
-          {/* Props & Requester Instagram */}
+          <div>
+            <label className="block text-xs font-bold text-gray-300 mb-1">
+              Special Props or Accessories (Optional)
+            </label>
+            <input
+              type="text"
+              value={specialProps}
+              onChange={(e) => setSpecialProps(e.target.value)}
+              placeholder="e.g. Miniature steel chair, ring jacket, sunglasses, microphone"
+              className="w-full px-3 py-2.5 rounded-xl bg-black/50 border border-dashed border-pink-400/30 text-sm font-script text-white placeholder-gray-400 focus:outline-none focus:border-pink-400"
+            />
+          </div>
+
+          {/* Contact handles */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-gray-300 mb-1">
-                Special Props (Optional)
-              </label>
-              <input
-                type="text"
-                value={props}
-                onChange={(e) => setProps(e.target.value)}
-                placeholder="e.g. Aviator shades, entrance mask, chair"
-                className="w-full px-3 py-2.5 rounded-xl bg-black/50 border border-dashed border-pink-400/30 text-sm font-script text-white placeholder-gray-400 focus:outline-none focus:border-pink-400"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-gray-300 mb-1">
-                Your Instagram Handle
+              <label className="block text-xs font-bold text-gray-300 mb-1 flex items-center gap-1">
+                <InstagramIcon className="w-3.5 h-3.5 text-pink-400" />
+                <span>Your Instagram Handle</span>
               </label>
               <input
                 type="text"
@@ -179,36 +195,60 @@ Please let me know your current availability and commission details. Thank you f
                 className="w-full px-3 py-2.5 rounded-xl bg-black/50 border border-dashed border-pink-400/30 text-sm font-script text-white placeholder-gray-400 focus:outline-none focus:border-pink-400"
               />
             </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-300 mb-1 flex items-center gap-1">
+                <WhatsAppIcon className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Your WhatsApp / Phone (Optional)</span>
+              </label>
+              <input
+                type="tel"
+                value={clientPhone}
+                onChange={(e) => setClientPhone(e.target.value)}
+                placeholder="+1 (207) 555-0199"
+                className="w-full px-3 py-2.5 rounded-xl bg-black/50 border border-dashed border-pink-400/30 text-sm font-script text-white placeholder-gray-400 focus:outline-none focus:border-pink-400"
+              />
+            </div>
           </div>
 
           {/* Preview of Generated DM Text */}
           <div className="space-y-1.5">
             <span className="text-xs font-bold text-gray-400 flex items-center gap-1">
               <YarnBallIcon className="w-3.5 h-3.5 text-pink-400" />
-              <span>Generated Message Preview:</span>
+              <span>Generated Inquiry Preview:</span>
             </span>
-            <div className="p-3 rounded-xl bg-black/70 border border-dashed border-pink-400/30 text-xs text-pink-200/90 font-mono whitespace-pre-wrap max-h-36 overflow-y-auto">
+            <div className="p-3 rounded-xl bg-black/70 border border-dashed border-pink-400/30 text-xs text-pink-200/90 font-mono whitespace-pre-wrap max-h-32 overflow-y-auto">
               {generatedDmText}
             </div>
           </div>
 
-          {/* Action Button */}
-          <div className="pt-2 flex items-center justify-end space-x-3">
+          {/* Dual Action Buttons: Send via Instagram or WhatsApp */}
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-end gap-2.5">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 text-xs font-crochet font-bold border border-dashed border-white/20 transition-colors cursor-pointer"
+              className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 text-xs font-crochet font-bold border border-dashed border-white/20 transition-colors cursor-pointer"
             >
               Close
             </button>
+            
+            <button
+              type="button"
+              onClick={handleOpenWhatsApp}
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-white font-crochet font-bold text-xs bg-emerald-600 hover:bg-emerald-500 shadow-lg shadow-emerald-900/30 border border-dashed border-emerald-300/40 flex items-center justify-center gap-2 transition-all cursor-pointer"
+            >
+              <WhatsAppIcon className="w-4 h-4 text-white" />
+              <span>Send via WhatsApp</span>
+              <ExternalLink className="w-3 h-3" />
+            </button>
+
             <button
               type="button"
               onClick={handleCopyAndOpenInstagram}
-              className="px-6 py-2.5 rounded-xl text-white font-crochet font-bold text-xs bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 shadow-lg shadow-pink-600/30 border border-dashed border-pink-300/40 flex items-center gap-2 transition-all cursor-pointer"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-white font-crochet font-bold text-xs bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 shadow-lg shadow-pink-600/30 border border-dashed border-pink-300/40 flex items-center justify-center gap-2 transition-all cursor-pointer"
             >
-              {copied ? <Check className="w-4 h-4 text-white" /> : <Copy className="w-4 h-4" />}
-              <span>{copied ? 'Copied! Opening Instagram...' : 'Copy & Open Hazel’s DM'}</span>
-              <ExternalLink className="w-3.5 h-3.5" />
+              {copied ? <Check className="w-4 h-4 text-white" /> : <InstagramIcon className="w-4 h-4 text-white" />}
+              <span>{copied ? 'Copied! Opening IG...' : 'Send via Instagram DM'}</span>
+              <ExternalLink className="w-3 h-3" />
             </button>
           </div>
 

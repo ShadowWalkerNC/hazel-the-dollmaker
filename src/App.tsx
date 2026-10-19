@@ -5,6 +5,7 @@ import { Hero } from './components/Hero';
 import { DollCard } from './components/DollCard';
 import { InstagramEmbedSection } from './components/InstagramEmbedSection';
 import { CraftAnatomySection } from './components/CraftAnatomySection';
+import { AboutSection } from './components/AboutSection';
 import { MerchStoreSection } from './components/MerchStoreSection';
 import { ProductDetailModal } from './components/ProductDetailModal';
 import { CartDrawer } from './components/CartDrawer';
@@ -12,15 +13,18 @@ import { CheckoutModal } from './components/CheckoutModal';
 import { AddInstagramModal } from './components/AddInstagramModal';
 import { DollDetailModal } from './components/DollDetailModal';
 import { CommissionModal } from './components/CommissionModal';
+import { AdminModal } from './components/AdminModal';
 import { InstagramIcon } from './components/InstagramIcon';
 import { CrochetHookIcon } from './components/CrochetIcons';
 import { INITIAL_DOLLS } from './data/initialDolls';
 import { INITIAL_PRODUCTS } from './data/products';
-import type { DollItem, Product, CartItem } from './types';
+import type { DollItem, Product, CartItem, OrderInfo } from './types';
 import { sounds } from './utils/audio';
 
 const DOLLS_STORAGE_KEY = 'hazel_dollmaker_collection_v2';
 const CART_STORAGE_KEY = 'hazel_dollmaker_cart_v2';
+const PRODUCTS_STORAGE_KEY = 'hazel_dollmaker_products_v2';
+const ORDERS_STORAGE_KEY = 'hazel_dollmaker_orders_v2';
 
 export const App: React.FC = () => {
   // Dolls Showcase State
@@ -35,7 +39,26 @@ export const App: React.FC = () => {
   });
 
   // Merchandise Products State
-  const [products] = useState<Product[]>(INITIAL_PRODUCTS);
+  const [products, setProducts] = useState<Product[]>(() => {
+    try {
+      const saved = localStorage.getItem(PRODUCTS_STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch {
+      // fallback
+    }
+    return INITIAL_PRODUCTS;
+  });
+
+  // Orders State for Hazel's Review
+  const [orders, setOrders] = useState<OrderInfo[]>(() => {
+    try {
+      const saved = localStorage.getItem(ORDERS_STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch {
+      // fallback
+    }
+    return [];
+  });
 
   // Cart State
   const [cart, setCart] = useState<CartItem[]>(() => {
@@ -48,7 +71,7 @@ export const App: React.FC = () => {
     return [];
   });
 
-  // Active view tab: 'store' | 'gallery' | 'instagram-hub' | 'craft'
+  // Active view tab: 'store' | 'gallery' | 'instagram-hub' | 'craft' | 'about-hazel'
   const [activeTab, setActiveTab] = useState('store');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -56,11 +79,70 @@ export const App: React.FC = () => {
   // Modals & Drawers
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isCommissionModalOpen, setIsCommissionModalOpen] = useState(false);
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [inspectDoll, setInspectDoll] = useState<DollItem | null>(null);
   const [checkoutPromo, setCheckoutPromo] = useState<{ code: string; discount: number }>({ code: '', discount: 0 });
+
+  // Load from backend API on initial mount
+  const refreshBackendData = async () => {
+    try {
+      const prodRes = await fetch('/api/products');
+      if (prodRes.ok) {
+        const prodData = await prodRes.json();
+        if (Array.isArray(prodData) && prodData.length > 0) {
+          setProducts(prodData);
+          localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(prodData));
+        } else {
+          // seed initial products to backend
+          await fetch('/api/products', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(INITIAL_PRODUCTS)
+          });
+        }
+      }
+    } catch (e) {
+      console.warn('Backend products not reachable, using local storage state', e);
+    }
+
+    try {
+      const ordersRes = await fetch('/api/orders');
+      if (ordersRes.ok) {
+        const ordersData = await ordersRes.json();
+        if (Array.isArray(ordersData)) {
+          setOrders(ordersData);
+          localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(ordersData));
+        }
+      }
+    } catch (e) {
+      console.warn('Backend orders not reachable, using local storage state', e);
+    }
+  };
+
+  useEffect(() => {
+    refreshBackendData();
+  }, []);
+
+  // Sync Products to local storage
+  useEffect(() => {
+    try {
+      localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(products));
+    } catch {
+      // ignore
+    }
+  }, [products]);
+
+  // Sync Orders to local storage
+  useEffect(() => {
+    try {
+      localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(orders));
+    } catch {
+      // ignore
+    }
+  }, [orders]);
 
   // Sync Dolls
   useEffect(() => {
@@ -143,6 +225,83 @@ export const App: React.FC = () => {
     }
   };
 
+  // Admin management handlers with backend API sync
+  const handleUpdateProduct = async (updated: Product) => {
+    try {
+      await fetch(`/api/products/${updated.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updated),
+      });
+    } catch (e) {
+      console.warn('Backend product update error:', e);
+    }
+    setProducts((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
+    sounds.playLikeChime();
+  };
+
+  const handleAddProduct = async (newProd: Partial<Product>) => {
+    const id = `hazel-prod-${Date.now()}`;
+    const product: Product = {
+      id,
+      name: newProd.name || 'Custom Item',
+      tagline: newProd.tagline || 'Handmade merchandise',
+      description: newProd.description || 'Crafted with premium yarn and wrestler spirit.',
+      features: newProd.features || ['Handmade in Maine', 'Freehand organic crochet stitch'],
+      price: newProd.price || 25,
+      category: newProd.category || 'apparel',
+      imageUrl: newProd.imageUrl || '/hazel-logo.jpg',
+      badge: newProd.badge,
+      inStock: true,
+      stockCount: newProd.stockCount ?? 15,
+      isSpecial: newProd.isSpecial ?? false,
+      specialDiscountText: newProd.specialDiscountText,
+      specialEndsAt: newProd.specialEndsAt,
+      rating: 5.0,
+      reviewCount: 1,
+    };
+
+    try {
+      await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify([product]),
+      });
+    } catch (e) {
+      console.warn('Backend product add error:', e);
+    }
+    setProducts((prev) => [product, ...prev]);
+    sounds.playRingBell();
+  };
+
+  const handleDeleteProduct = async (id: string) => {
+    try {
+      await fetch(`/api/products/${id}`, {
+        method: 'DELETE',
+      });
+    } catch (e) {
+      console.warn('Backend product delete error:', e);
+    }
+    setProducts((prev) => prev.filter((p) => p.id !== id));
+    sounds.playTrashSwoosh();
+  };
+
+  const handleUpdateOrderStatus = async (orderId: string, status: OrderInfo['status']) => {
+    try {
+      await fetch(`/api/orders/${orderId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+    } catch (e) {
+      console.warn('Backend order update error:', e);
+    }
+    setOrders((prev) =>
+      prev.map((o) => (o.orderId === orderId ? { ...o, status } : o))
+    );
+    sounds.playLikeChime();
+  };
+
   // Filter dolls based on search query & category
   const filteredDolls = dolls.filter((doll) => {
     const matchesCategory =
@@ -166,6 +325,8 @@ export const App: React.FC = () => {
   });
 
   const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
+  const pendingOrdersCount = orders.filter((o) => o.status === 'pending_review').length;
+  const heroSpecials = products.filter((p) => p.isSpecial);
 
   return (
     <div className="min-h-screen crochet-bg text-gray-100 flex flex-col font-sans selection:bg-pink-600 selection:text-white">
@@ -181,9 +342,11 @@ export const App: React.FC = () => {
           const el = document.getElementById(targetId);
           el?.scrollIntoView({ behavior: 'smooth' });
         }}
+        onOpenAdmin={() => setIsAdminOpen(true)}
+        pendingOrdersCount={pendingOrdersCount}
       />
 
-      {/* Hero Section */}
+      {/* Hero Section with Live Drop Specials */}
       <Hero
         onShopClick={() => {
           setActiveTab('store');
@@ -195,6 +358,8 @@ export const App: React.FC = () => {
           const el = document.getElementById('gallery-section');
           el?.scrollIntoView({ behavior: 'smooth' });
         }}
+        specials={heroSpecials}
+        onSelectProduct={(p) => setSelectedProduct(p)}
       />
 
       {/* Main Content Area */}
@@ -205,6 +370,11 @@ export const App: React.FC = () => {
           products={products}
           onSelectProduct={(p) => setSelectedProduct(p)}
           onQuickAddToCart={handleQuickAddToCart}
+        />
+
+        {/* 2. About The Dollmaker Section */}
+        <AboutSection
+          onOpenCommission={() => setIsCommissionModalOpen(true)}
         />
 
         {/* 2. Wrestler & Doll Tribute Gallery */}
@@ -408,7 +578,10 @@ export const App: React.FC = () => {
         items={cart}
         promoCode={checkoutPromo.code}
         discount={checkoutPromo.discount}
-        onOrderSuccess={() => setCart([])}
+        onOrderSuccess={(newOrder) => {
+          setCart([]);
+          setOrders((prev) => [newOrder, ...prev]);
+        }}
       />
 
       <AddInstagramModal
@@ -427,6 +600,19 @@ export const App: React.FC = () => {
       <CommissionModal
         isOpen={isCommissionModalOpen}
         onClose={() => setIsCommissionModalOpen(false)}
+      />
+
+      {/* Studio Control Room: Hazel Admin Inventory & Order Review Modal */}
+      <AdminModal
+        isOpen={isAdminOpen}
+        onClose={() => setIsAdminOpen(false)}
+        products={products}
+        orders={orders}
+        onUpdateProduct={handleUpdateProduct}
+        onAddProduct={handleAddProduct}
+        onDeleteProduct={handleDeleteProduct}
+        onUpdateOrderStatus={handleUpdateOrderStatus}
+        onRefreshData={refreshBackendData}
       />
 
     </div>

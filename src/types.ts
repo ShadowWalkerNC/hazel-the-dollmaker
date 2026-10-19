@@ -24,6 +24,8 @@ export interface CommissionRequest {
   beltDetails?: string;
   specialProps?: string;
   clientInstagram: string;
+  clientPhone?: string;
+  preferredChannel?: 'instagram' | 'whatsapp';
   notes?: string;
 }
 
@@ -43,6 +45,10 @@ export interface Product {
   secondaryImageUrl?: string;
   mockupType?: 'tee' | 'hoodie' | 'sticker' | 'pin' | 'tote' | 'doll';
   inStock: boolean;
+  stockCount?: number;
+  isSpecial?: boolean;
+  specialEndsAt?: string; // ISO date string for countdown timer
+  specialDiscountText?: string;
   hasSizes?: boolean;
   sizes?: string[];
   requiresCustomNotes?: boolean;
@@ -64,6 +70,8 @@ export interface OrderInfo {
   customerName: string;
   customerEmail: string;
   customerInstagram?: string;
+  customerPhone?: string;
+  preferredContact: 'instagram' | 'whatsapp' | 'email';
   shippingAddress: string;
   items: CartItem[];
   subtotal: number;
@@ -71,5 +79,8 @@ export interface OrderInfo {
   shipping: number;
   total: number;
   promoCode?: string;
+  status: 'pending_review' | 'discussing' | 'confirmed' | 'crafted' | 'shipped';
+  notesToHazel?: string;
   date: string;
+  createdAt: number;
 }

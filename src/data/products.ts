@@ -1,7 +1,62 @@
 import type { Product } from '../types';
 
 export const INITIAL_PRODUCTS: Product[] = [
-  // 1. Official Logo Apparel
+  // 1. Limited Time Special Drops (Shown in Hero Specials Banner)
+  {
+    id: 'hazel-limited-halloween-drop',
+    name: 'Special Drop: "Midnight Neon" Limitless Championship Hoodie',
+    tagline: 'Limited run of 25 hand-numbered fleece pullovers with metallic yarn embroidery',
+    price: 58.00,
+    originalPrice: 78.00,
+    category: 'limited',
+    badge: 'Limited Drop • 48h Special',
+    mockupType: 'hoodie',
+    isSpecial: true,
+    specialEndsAt: new Date(Date.now() + 48 * 3600 * 1000).toISOString(),
+    specialDiscountText: 'Save $20 Ringside Special',
+    stockCount: 9,
+    description: 'Limited edition ringside pullover crafted for cold Maine wrestling nights! Features Hazel’s official neon star wand artwork with shimmering metallic purple thread and a custom numbered interior neck tag.',
+    features: [
+      'Only 25 pieces ever printed worldwide (9 remaining)',
+      'Heavyweight 450 GSM fleece with double-lined hood',
+      'Exclusive metallic purple & gold screen print',
+      'Includes signed certificate from Hazel The Dollmaker',
+      'Pre-shrunk ring-spun cotton blend'
+    ],
+    imageUrl: '/hazel-logo.jpg',
+    inStock: true,
+    hasSizes: true,
+    sizes: ['S', 'M', 'L', 'XL', '2XL'],
+    rating: 5.0,
+    reviewCount: 42,
+  },
+  {
+    id: 'hazel-limited-crochet-pin-pack',
+    name: 'Limited Collector’s Enamel Pin & Holographic Sticker Bundle',
+    tagline: 'Die-cast soft enamel crochet wand pin + 3 waterproof rainbow holo stickers',
+    price: 18.00,
+    originalPrice: 26.00,
+    category: 'limited',
+    badge: 'Hero Bundle Special',
+    mockupType: 'pin',
+    isSpecial: true,
+    specialEndsAt: new Date(Date.now() + 36 * 3600 * 1000).toISOString(),
+    specialDiscountText: '30% Off This Weekend',
+    stockCount: 14,
+    description: 'The complete collector starter pack! Grab Hazel’s official soft enamel crochet wand pin (with twin rubber clutches) paired with 3 heavy-duty holographic vinyl stickers rated for water bottles, luggage, and turnbuckle gear bags.',
+    features: [
+      '1.75" die-cast hard enamel pin with black nickel plating',
+      '3x heavy-duty weatherproof holographic vinyl stickers',
+      'Twin rubber pin clutches for ultra-secure hold on jackets & backpacks',
+      'Custom stamped Hazel backing card'
+    ],
+    imageUrl: '/hazel-logo.jpg',
+    inStock: true,
+    rating: 5.0,
+    reviewCount: 31,
+  },
+
+  // 2. Official Logo Apparel
   {
     id: 'hazel-official-logo-tee',
     name: 'Official "Hazel The Dollmaker" Neon Rope Heavyweight Tee',
@@ -11,6 +66,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     category: 'apparel',
     badge: 'Official Logo Drop',
     mockupType: 'tee',
+    stockCount: 22,
     description: 'The definitive Hazel The Dollmaker graphic t-shirt! Screen-printed in vibrant neon purple, cyan, and pastel pink on premium 6.5oz heavyweight cotton. Featuring the signature crochet wand, star, and twisted rope lettering.',
     features: [
       '100% Ring-spun heavyweight combed cotton',
@@ -35,6 +91,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     category: 'apparel',
     badge: 'Ringside Essential',
     mockupType: 'hoodie',
+    stockCount: 15,
     description: 'Keep warm while waiting for doors at independent wrestling shows! Heavyweight 450 GSM fleece hoodie featuring the iconic Hazel The Dollmaker logo on the chest, kangaroo pouch pocket, and flat drawstrings.',
     features: [
       'Double-fleece lined hood with thick flat drawstrings',
@@ -51,7 +108,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     reviewCount: 24,
   },
 
-  // 2. Custom Handcrafted Dolls (Made-To-Order Commissions)
+  // 3. Custom Handcrafted Dolls (Made-To-Order Commissions)
   {
     id: 'custom-single-wrestler-doll',
     name: 'Custom Freehand Wrestler Likeness Doll (Made-To-Order)',
@@ -61,6 +118,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     category: 'custom-doll',
     badge: '1 of 1 Handcrafted Art',
     mockupType: 'doll',
+    stockCount: 5,
     description: 'Order your very own 1-of-1 custom crochet doll crafted directly by Hazel! Provide any pro wrestler, indie hero, or your own wrestling character. Hazel recreates their ring trunks, kickpads, boots, tattoos, and signature hairstyles directly from match reference photos.',
     features: [
       '100% Freehand crochet construction (approx. 9-11 inches tall)',
@@ -85,6 +143,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     category: 'custom-doll',
     badge: 'Heavyweight Champion Tier',
     mockupType: 'doll',
+    stockCount: 3,
     description: 'The ultimate wrestling tribute. Includes everything from the custom likeness doll plus a miniature handcrafted Championship Belt with metallic gold thread, raised centerplate detailing, and velcro clasp to wear around the doll’s waist or over their shoulder!',
     features: [
       'Detailed replica miniature title belt (Limitless, World, Tag, or Custom)',
@@ -98,93 +157,52 @@ export const INITIAL_PRODUCTS: Product[] = [
     requiresCustomNotes: true,
     customNotesPlaceholder: 'Wrestler name + title belt name (e.g. Nic Nemeth Global Championship, or Limitless World Title)...',
     rating: 5.0,
-    reviewCount: 45,
-  },
-  {
-    id: 'tag-team-duo-set',
-    name: 'Tag Team Champions Duo Set (2 Matching Likeness Dolls)',
-    tagline: 'Pair of custom likenesses with dual belts or matching entrance jackets',
-    price: 260.00,
-    originalPrice: 290.00,
-    category: 'custom-doll',
-    badge: 'Tag Team Special',
-    mockupType: 'doll',
-    description: 'Celebrate your favorite tag team duo or faction! Hazel meticulously creates two matching likeness dolls with coordinating gear colorways and miniature tag belts.',
-    features: [
-      'Two (2) custom handcrafted likeness dolls',
-      'Coordinated tag team entrance gear and kickpad artwork',
-      'Two miniature championship straps or team accessories',
-      'Double display stand'
-    ],
-    imageUrl: '/hazel-logo.jpg',
-    inStock: true,
-    requiresCustomNotes: true,
-    customNotesPlaceholder: 'Team name, both wrestler names, gear theme...',
-    rating: 5.0,
-    reviewCount: 19,
+    reviewCount: 47,
   },
 
-  // 3. Stickers & Collectibles
+  // 4. Stickers & Accessories
   {
-    id: 'hazel-die-cut-sticker-pack',
-    name: 'Official "Hazel The Dollmaker" Holographic Sticker Pack (Set of 5)',
-    tagline: 'Heavy-duty weather-resistant holographic & vinyl decals',
-    price: 14.00,
+    id: 'hazel-holographic-sticker-pack',
+    name: 'Hazel The Dollmaker Holographic Die-Cut Sticker Pack (5-Pack)',
+    tagline: 'Rainbow reflective 3-inch vinyl stickers, UV & waterproof coated',
+    price: 12.00,
+    originalPrice: 15.00,
     category: 'stickers',
     badge: 'Fan Favorite',
     mockupType: 'sticker',
-    description: 'Slap them on your laptop, water bottle, gear bag, or wrestling flight case! Includes 5 high-grade die-cut vinyl stickers: the Official Hazel Logo, the Crocheted Star Wand, Mini Championship Belt, "Freehand No Patterns" Ring Apron, and the Hazel Stitched Heart.',
+    stockCount: 45,
+    description: 'Slap Hazel’s official logo on your laptop, water bottle, gear box, or championship belt case! Printed on thick holographic vinyl with a protective laminate that withstands sunlight, rain, and dishwasher heat.',
     features: [
-      '5 distinct premium die-cut stickers (3" to 4" each)',
-      'Holographic foil & UV-protected matte laminate',
-      'Waterproof, weatherproof, and dishwasher-safe',
-      'Easy-peel backing'
-    ],
-    imageUrl: '/hazel-logo.jpg',
-    inStock: true,
-    rating: 4.9,
-    reviewCount: 52,
-  },
-  {
-    id: 'crochet-star-enamel-pin',
-    name: 'Hazel\'s Crochet Star Wand Hard Enamel Pin',
-    tagline: 'Gold-plated hard enamel pin with purple glitter fill',
-    price: 16.00,
-    category: 'accessories',
-    badge: 'Limited Run of 250',
-    mockupType: 'pin',
-    description: 'Wear Hazel’s magical crochet wand everywhere you go. Features the star with knit stitch texture relief, polished gold metal plating, and rubber clutch backings so it stays secure on your jacket lapel or lanyard.',
-    features: [
-      '1.6" Custom die-cast hard enamel pin',
-      'Polished gold plating with raised fiber stitch texture',
-      'Double pin posts with secure locking rubber clutches',
-      'Mounted on custom illustrated Hazel The Dollmaker backing card'
+      'Five 3-inch holographic vinyl stickers per pack',
+      'Custom die-cut outline following the star & rope logo',
+      'UV-resistant & 100% waterproof',
+      'Easy-peel backing tab'
     ],
     imageUrl: '/hazel-logo.jpg',
     inStock: true,
     rating: 5.0,
-    reviewCount: 31,
+    reviewCount: 88,
   },
-
-  // 4. Accessories
   {
-    id: 'turnbuckle-tote-bag',
-    name: '"No Patterns" Heavyweight Canvas Ring Tote Bag',
-    tagline: 'Heavy 12oz natural cotton canvas with reinforced wrestling ring handles',
-    price: 28.00,
+    id: 'hazel-canvas-tote',
+    name: 'Hazel The Dollmaker Heavyweight Ringside Canvas Tote Bag',
+    tagline: 'Durable 12oz cotton canvas bag for wrestling shows, yarn skeins & merch',
+    price: 24.00,
+    originalPrice: 28.00,
     category: 'accessories',
-    badge: 'Eco Friendly',
+    badge: 'Yarn & Gear Carrier',
     mockupType: 'tote',
-    description: 'Spacious everyday tote bag printed with Hazel The Dollmaker’s full logo and ringside crochet illustration. Perfect for carrying yarn skeins, wrestling merch, or live event tickets.',
+    stockCount: 18,
+    description: 'Spacious 12oz natural cotton canvas tote featuring Hazel’s full official logo print on one side. Reinforced long shoulder handles carry multiple yarn skeins, wrestling DVDs, t-shirts, or show programs with ease.',
     features: [
-      'Heavy-duty 12oz 100% natural cotton canvas',
-      'Reinforced dual shoulder straps',
-      'Screen-printed with eco-friendly durable inks',
-      'Interior zippered slip pocket for phone & wallet'
+      '12oz heavy-duty 100% natural cotton canvas',
+      'Extra-wide 24" reinforced webbed handles for comfortable shoulder carry',
+      'Generous 15" x 16" x 3" gusseted design holds up to 30 lbs',
+      'Interior zipped security pocket for phones & keys'
     ],
     imageUrl: '/hazel-logo.jpg',
     inStock: true,
     rating: 4.9,
-    reviewCount: 17,
+    reviewCount: 19,
   }
 ];
