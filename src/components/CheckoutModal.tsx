@@ -73,26 +73,26 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md overflow-y-auto">
-      <div className="relative w-full max-w-2xl my-8 bg-[#12141e] border border-gray-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+      <div className="relative w-full max-w-2xl my-8 crochet-patch rounded-3xl shadow-2xl overflow-hidden flex flex-col border-2 border-dashed border-pink-400/40">
         
         {/* Header */}
-        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-800 bg-[#0e1017]">
+        <div className="flex items-center justify-between p-4 sm:p-5 border-b-2 border-dashed border-pink-400/20 bg-[#141120]">
           <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl overflow-hidden border border-purple-500/40">
-              <img src="/hazel-logo.jpg" alt="Logo" className="w-full h-full object-cover" />
+            <div className="w-10 h-10 rounded-xl overflow-hidden border-2 border-dashed border-pink-400/50 p-0.5 bg-black">
+              <img src="/hazel-logo.jpg" alt="Logo" className="w-full h-full object-cover rounded-lg" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white font-['Russo_One',sans-serif]">
+              <h2 className="text-lg font-crochet font-bold text-white">
                 {isCompleted ? 'Order Confirmed!' : 'Hazel The Dollmaker Checkout'}
               </h2>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-pink-300 font-script">
                 {isCompleted ? 'Thank you for supporting independent fiber art' : 'Secure Checkout & Handmade Guarantee'}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+            className="p-1.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>

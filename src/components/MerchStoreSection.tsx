@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Search, ShoppingBag } from 'lucide-react';
 import type { Product } from '../types';
 import { ProductCard } from './ProductCard';
+import { YarnBallIcon } from './CrochetIcons';
 
 interface MerchStoreSectionProps {
   products: Product[];
@@ -18,11 +19,11 @@ export const MerchStoreSection: React.FC<MerchStoreSectionProps> = ({
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const categories = [
-    { id: 'all', label: 'All Merch' },
-    { id: 'apparel', label: 'Apparel' },
-    { id: 'custom-doll', label: 'Custom Dolls' },
-    { id: 'stickers', label: 'Stickers' },
-    { id: 'accessories', label: 'Pins & Accessories' },
+    { id: 'all', label: 'All Goodies', icon: '🧶' },
+    { id: 'apparel', label: 'Apparel', icon: '👕' },
+    { id: 'custom-doll', label: 'Custom Dolls', icon: '🪡' },
+    { id: 'stickers', label: 'Stickers', icon: '✨' },
+    { id: 'accessories', label: 'Pins & Bags', icon: '🧷' },
   ];
 
   const filteredProducts = products.filter((p) => {
@@ -37,53 +38,55 @@ export const MerchStoreSection: React.FC<MerchStoreSectionProps> = ({
   });
 
   return (
-    <section id="merch-store" className="py-14 bg-[#0a0b12] border-b border-white/[0.08]">
+    <section id="merch-store" className="py-14 bg-[#0d0c16] border-b-2 border-dashed border-pink-500/20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div>
-            <span className="text-xs font-semibold text-pink-400 uppercase tracking-wider">
-              Official Store
-            </span>
+            <div className="inline-flex items-center gap-1.5 text-xs font-crochet font-bold text-pink-400 uppercase tracking-wider mb-1">
+              <YarnBallIcon className="w-3.5 h-3.5 text-pink-400" />
+              <span>Official Merch Table</span>
+            </div>
             <h2 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight font-['Russo_One',sans-serif]">
-              Merchandise & Custom Dolls
+              Apparel, Stickers & Custom Dolls
             </h2>
           </div>
 
           {/* Search bar */}
           <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-3 top-2.5 w-4 h-4 text-pink-400" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search merchandise..."
-              className="w-full pl-9 pr-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors"
+              placeholder="Search store items..."
+              className="w-full pl-9 pr-3 py-2 rounded-xl bg-black/40 border-2 border-dashed border-pink-400/30 text-xs font-crochet text-white placeholder-gray-400 focus:outline-none focus:border-pink-400 transition-colors"
             />
           </div>
         </div>
 
-        {/* Category Tabs */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-2 mb-8 scrollbar-none border-b border-white/[0.06]">
+        {/* Category Tabs styled as tactile swatches */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-8 scrollbar-none border-b border-dashed border-pink-400/20">
           {categories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-crochet font-bold whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer ${
                 selectedCategory === cat.id
-                  ? 'bg-purple-600 text-white shadow-sm'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
+                  ? 'bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-md border-2 border-dashed border-pink-200/50'
+                  : 'text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border-2 border-dashed border-transparent'
               }`}
             >
-              {cat.label}
+              <span>{cat.icon}</span>
+              <span>{cat.label}</span>
             </button>
           ))}
         </div>
 
         {/* Product Grid */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredProducts.map((product) => (
               <ProductCard
                 key={product.id}
@@ -94,16 +97,16 @@ export const MerchStoreSection: React.FC<MerchStoreSectionProps> = ({
             ))}
           </div>
         ) : (
-          <div className="text-center py-16 rounded-2xl bg-white/[0.02] border border-white/10 p-8 space-y-3">
-            <ShoppingBag className="w-10 h-10 text-gray-600 mx-auto" />
-            <h3 className="text-sm font-bold text-white">No items found</h3>
-            <p className="text-xs text-gray-400">Try selecting another category or clearing your search.</p>
+          <div className="text-center py-16 rounded-2xl crochet-patch p-8 space-y-3">
+            <ShoppingBag className="w-10 h-10 text-pink-400/50 mx-auto" />
+            <h3 className="text-sm font-crochet font-bold text-white">No items found in this yarn basket</h3>
+            <p className="text-xs text-gray-300 font-script">Try selecting another category or clearing your search.</p>
             <button
               onClick={() => {
                 setSelectedCategory('all');
                 setSearchQuery('');
               }}
-              className="px-4 py-1.5 rounded-lg bg-purple-600 text-white text-xs font-semibold"
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-pink-600 to-purple-600 text-white text-xs font-crochet font-bold border border-dashed border-pink-300/40 cursor-pointer"
             >
               Reset Filters
             </button>

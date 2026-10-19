@@ -81,26 +81,26 @@ export const InstagramEmbedSection: React.FC<InstagramEmbedSectionProps> = ({
   };
 
   return (
-    <section id="instagram-hub" className="py-14 bg-[#0a0c12] border-b border-white/[0.08] relative">
+    <section id="instagram-hub" className="py-14 bg-[#0d0c16] border-b-2 border-dashed border-pink-500/20 relative">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-10 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-400 text-xs font-semibold">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-pink-500/10 border-2 border-dashed border-pink-400/30 text-pink-300 text-xs font-crochet font-semibold">
             <InstagramIcon className="w-3.5 h-3.5 text-pink-400" />
             <span>Interactive Instagram Showcase Hub</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight uppercase font-['Russo_One',sans-serif]">
             Put Her Instagram To Showcase Her Art
           </h2>
-          <p className="text-sm sm:text-base text-gray-300">
+          <p className="text-sm sm:text-base text-gray-300 font-script">
             Easily feature posts directly from Hazel’s Instagram feed (<a href="https://www.instagram.com/hazel_the_dollmaker/" target="_blank" rel="noopener noreferrer" className="text-pink-400 hover:underline font-semibold">@hazel_the_dollmaker</a>). Paste any post or reel link below to showcase her wrestler and doll creations in real time.
           </p>
         </div>
 
         {/* Quick Paste Bar */}
         <div className="max-w-4xl mx-auto mb-12">
-          <form onSubmit={handleQuickAdd} className="p-2 sm:p-3 rounded-2xl bg-[#141622] border border-gray-700 shadow-xl flex flex-col md:flex-row items-center gap-2">
+          <form onSubmit={handleQuickAdd} className="p-3 sm:p-4 rounded-3xl crochet-patch border-2 border-dashed border-pink-400/30 shadow-xl flex flex-col md:flex-row items-center gap-2.5">
             <div className="flex-1 w-full flex items-center px-3 py-2 bg-gray-900 rounded-xl border border-gray-800">
               <InstagramIcon className="w-5 h-5 text-pink-400 mr-2.5 flex-shrink-0" />
               <input

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, RotateCcw, Plus } from 'lucide-react';
+import { Search, RotateCcw, Plus, Sparkles } from 'lucide-react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { DollCard } from './components/DollCard';
@@ -13,6 +13,7 @@ import { AddInstagramModal } from './components/AddInstagramModal';
 import { DollDetailModal } from './components/DollDetailModal';
 import { CommissionModal } from './components/CommissionModal';
 import { InstagramIcon } from './components/InstagramIcon';
+import { CrochetHookIcon } from './components/CrochetIcons';
 import { INITIAL_DOLLS } from './data/initialDolls';
 import { INITIAL_PRODUCTS } from './data/products';
 import type { DollItem, Product, CartItem } from './types';
@@ -148,15 +149,16 @@ export const App: React.FC = () => {
       selectedCategory === 'all'
         ? true
         : selectedCategory === 'user-added'
-        ? Boolean(doll.isUserAdded)
+        ? doll.isUserAdded
         : doll.category === selectedCategory;
 
     const q = searchQuery.toLowerCase().trim();
+    if (!q) return matchesCategory;
+
     const matchesSearch =
-      !q ||
       doll.wrestlerName.toLowerCase().includes(q) ||
-      doll.dollTitle.toLowerCase().includes(q) ||
       doll.promotion.toLowerCase().includes(q) ||
+      doll.dollTitle.toLowerCase().includes(q) ||
       doll.gearDetails.some((g) => g.toLowerCase().includes(q)) ||
       doll.story.toLowerCase().includes(q);
 
@@ -166,9 +168,9 @@ export const App: React.FC = () => {
   const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-[#0b0c12] text-gray-100 flex flex-col font-sans selection:bg-purple-600 selection:text-white">
+    <div className="min-h-screen crochet-bg text-gray-100 flex flex-col font-sans selection:bg-pink-600 selection:text-white">
       
-      {/* Clean Streamlined Header */}
+      {/* Clean Streamlined Header with Stitched Edge */}
       <Navbar
         onOpenCart={() => setIsCartOpen(true)}
         cartItemCount={cartItemCount}
@@ -206,15 +208,16 @@ export const App: React.FC = () => {
         />
 
         {/* 2. Wrestler & Doll Tribute Gallery */}
-        <section id="gallery-section" className="py-14 border-b border-white/[0.08] bg-[#0b0c12]">
+        <section id="gallery-section" className="py-14 border-b-2 border-dashed border-pink-500/20 bg-[#0d0c16]">
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
             
             {/* Section Header */}
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
               <div>
-                <span className="text-xs font-semibold text-pink-400 uppercase tracking-wider">
-                  Ringside Archive
-                </span>
+                <div className="inline-flex items-center gap-1.5 text-xs font-crochet font-bold text-pink-400 uppercase tracking-wider mb-1">
+                  <CrochetHookIcon className="w-3.5 h-3.5 text-pink-400" />
+                  <span>Ringside Freehand Archive</span>
+                </div>
                 <h2 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight font-['Russo_One',sans-serif]">
                   Wrestler Likeness Dolls
                 </h2>
@@ -225,9 +228,9 @@ export const App: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsAddModalOpen(true)}
-                  className="h-9 px-3.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-200 hover:text-white text-xs font-semibold border border-white/10 flex items-center gap-1.5 transition-colors"
+                  className="h-9 px-3.5 rounded-xl bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white text-xs font-crochet font-bold border border-dashed border-pink-300/40 flex items-center gap-1.5 transition-all shadow-md cursor-pointer"
                 >
-                  <Plus className="w-3.5 h-3.5 text-pink-400" />
+                  <Plus className="w-3.5 h-3.5" />
                   <span>Add Post</span>
                 </button>
 
@@ -235,7 +238,7 @@ export const App: React.FC = () => {
                   type="button"
                   onClick={handleResetCatalog}
                   title="Reset to default collection"
-                  className="h-9 px-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white border border-white/10 transition-colors flex items-center justify-center"
+                  className="h-9 px-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white border border-dashed border-pink-400/20 transition-all flex items-center justify-center cursor-pointer"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                 </button>
@@ -243,44 +246,45 @@ export const App: React.FC = () => {
             </div>
 
             {/* Category Filter Tabs & Search */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-8 pb-3 border-b border-white/[0.06]">
-              <div className="w-full sm:w-auto flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-8 pb-3 border-b border-dashed border-pink-400/20">
+              <div className="w-full sm:w-auto flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
                 {[
-                  { id: 'all', label: 'All Likenesses' },
-                  { id: 'champion', label: 'Champions' },
-                  { id: 'ringside-gift', label: 'Ringside Gifts' },
-                  { id: 'indie-favorite', label: 'Indie Favorites' },
-                  { id: 'user-added', label: 'Added By You' },
+                  { id: 'all', label: 'All Likenesses', icon: '🧶' },
+                  { id: 'champion', label: 'Champions', icon: '🏆' },
+                  { id: 'ringside-gift', label: 'Ringside Gifts', icon: '🎁' },
+                  { id: 'indie-favorite', label: 'Indie Favorites', icon: '⚡' },
+                  { id: 'user-added', label: 'Added By You', icon: '✨' },
                 ].map((cat) => (
                   <button
                     key={cat.id}
                     onClick={() => setSelectedCategory(cat.id)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                    className={`px-3 py-1.5 rounded-xl text-xs font-crochet font-bold whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer ${
                       selectedCategory === cat.id
-                        ? 'bg-purple-600 text-white shadow-sm'
-                        : 'text-gray-400 hover:text-white hover:bg-white/5'
+                        ? 'bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-md border-2 border-dashed border-pink-200/50'
+                        : 'text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border-2 border-dashed border-transparent'
                     }`}
                   >
-                    {cat.label}
+                    <span>{cat.icon}</span>
+                    <span>{cat.label}</span>
                   </button>
                 ))}
               </div>
 
               <div className="relative w-full sm:w-56">
-                <Search className="absolute left-3 top-2.5 w-3.5 h-3.5 text-gray-400" />
+                <Search className="absolute left-3 top-2.5 w-3.5 h-3.5 text-pink-400" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Filter wrestlers..."
-                  className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/10 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors"
+                  className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-black/40 border-2 border-dashed border-pink-400/30 text-xs font-crochet text-white placeholder-gray-400 focus:outline-none focus:border-pink-400 transition-colors"
                 />
               </div>
             </div>
 
             {/* Dolls Grid */}
             {filteredDolls.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredDolls.map((doll) => (
                   <DollCard
                     key={doll.id}
@@ -291,14 +295,14 @@ export const App: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-14 rounded-2xl bg-white/[0.02] border border-white/10 p-6 space-y-2">
-                <p className="text-xs text-gray-400">No matching wrestler likenesses found.</p>
+              <div className="text-center py-14 rounded-2xl crochet-patch p-6 space-y-2">
+                <p className="text-xs text-gray-300 font-script">No matching wrestler likenesses found.</p>
                 <button
                   onClick={() => {
                     setSearchQuery('');
                     setSelectedCategory('all');
                   }}
-                  className="px-3 py-1 rounded-md bg-purple-600 text-white text-xs font-semibold"
+                  className="px-4 py-1.5 rounded-xl bg-gradient-to-r from-pink-600 to-purple-600 text-white text-xs font-crochet font-bold border border-dashed border-pink-300/40 cursor-pointer"
                 >
                   Reset
                 </button>
@@ -318,33 +322,64 @@ export const App: React.FC = () => {
         {/* 4. Craft Anatomy & Dollmaker Philosophy */}
         <CraftAnatomySection />
 
+        {/* 5. Custom Commission Callout Banner */}
+        <section className="py-12 bg-[#0c0b14] border-b-2 border-dashed border-pink-500/20">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6">
+            <div className="crochet-patch rounded-3xl p-6 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl relative">
+              <div className="space-y-2 text-center md:text-left">
+                <div className="inline-flex items-center gap-1.5 text-xs font-crochet font-bold text-amber-300">
+                  <Sparkles className="w-4 h-4 text-pink-400" />
+                  <span>Custom Orders Without Patterns</span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-white font-['Russo_One',sans-serif]">
+                  Have Hazel Crochet Your Ring Gear or Favorite Wrestler
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-300 font-script max-w-2xl leading-relaxed">
+                  Every custom doll is sculpted organically with exact gear matching, safety eyes, custom championship belts, and rooted fiber hair. 100% 1-of-1 handmade art.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsCommissionModalOpen(true)}
+                className="px-6 py-3 rounded-2xl bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-crochet font-bold text-sm shadow-xl shadow-pink-600/30 border-2 border-dashed border-pink-200/50 flex items-center gap-2 transition-all active:scale-95 cursor-pointer whitespace-nowrap flex-shrink-0"
+              >
+                <CrochetHookIcon className="w-5 h-5" />
+                <span>Request Custom Doll</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
       </main>
 
-      {/* Clean Uniform Footer */}
-      <footer className="bg-[#08090e] border-t border-white/[0.08] py-10">
+      {/* Cozy Stitched Footer */}
+      <footer className="bg-[#090810] border-t-2 border-dashed border-pink-500/20 py-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             
             {/* Brand Logo & Name */}
-            <div className="flex items-center space-x-2.5">
-              <div className="w-8 h-8 rounded-full overflow-hidden border border-white/10 bg-black flex-shrink-0">
-                <img src="/hazel-logo.jpg" alt="Logo" className="w-full h-full object-cover" />
+            <div className="flex items-center space-x-3">
+              <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-dashed border-pink-400/60 bg-black flex-shrink-0 p-0.5">
+                <img src="/hazel-logo.jpg" alt="Logo" className="w-full h-full object-cover rounded-full" />
               </div>
-              <span className="text-xs font-bold text-white tracking-wide">
-                Hazel The Dollmaker
-              </span>
-              <span className="text-xs text-gray-400">• Handcrafted in Maine</span>
+              <div>
+                <span className="text-sm font-crochet font-bold text-white tracking-wide">
+                  Hazel The Dollmaker
+                </span>
+                <span className="text-xs text-pink-300/80 font-script ml-2">• Hand-stitched in Maine with ❤️ & yarn</span>
+              </div>
             </div>
 
-            {/* Clean link */}
+            {/* Instagram link */}
             <a
               href="https://www.instagram.com/hazel_the_dollmaker/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-pink-400 hover:text-pink-300 font-medium inline-flex items-center gap-1.5 transition-colors"
+              className="text-xs font-crochet font-medium text-pink-300 hover:text-white inline-flex items-center gap-1.5 transition-colors bg-pink-500/10 px-3 py-1.5 rounded-xl border border-dashed border-pink-400/30"
             >
               <InstagramIcon className="w-3.5 h-3.5 text-pink-400" />
-              <span>Follow @hazel_the_dollmaker on Instagram</span>
+              <span>@hazel_the_dollmaker on Instagram</span>
             </a>
 
           </div>

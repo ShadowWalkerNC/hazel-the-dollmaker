@@ -83,21 +83,21 @@ export const AddInstagramModal: React.FC<AddInstagramModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-2xl my-8 bg-[#12141c] border border-gray-700 rounded-2xl shadow-2xl p-6 sm:p-8 space-y-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
+      <div className="relative w-full max-w-2xl my-8 crochet-patch rounded-3xl shadow-2xl p-6 sm:p-8 space-y-6 border-2 border-dashed border-pink-400/40">
         
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-gray-800">
+        <div className="flex items-center justify-between pb-4 border-b-2 border-dashed border-pink-400/20">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl instagram-gradient flex items-center justify-center text-white shadow-md">
+            <div className="w-10 h-10 rounded-xl instagram-gradient flex items-center justify-center text-white shadow-md border border-dashed border-pink-200/40">
               <InstagramIcon className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-white flex items-center gap-2">
+              <h2 className="text-xl font-crochet font-bold text-white flex items-center gap-2">
                 Put Hazel's Instagram Post
                 <Sparkles className="w-4 h-4 text-pink-400" />
               </h2>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-pink-300 font-script">
                 Showcase Hazel's wrestling & doll artwork directly on the site
               </p>
             </div>
