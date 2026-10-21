@@ -1,61 +1,46 @@
-# Hazel The Dollmaker — Official Merchandise Store & Wrestling Crochet Showcase 🪡✨
+# Hazel The Dollmaker
 
-The official e-commerce storefront and tribute showcase for **Hazel The Dollmaker** ([@hazel_the_dollmaker](https://www.instagram.com/hazel_the_dollmaker/)).
+The single maintained source for Hazel’s handmade wrestling collectibles site.
 
-Featuring Hazel's official logo (the iconic neon crochet wand, sparkling star, and twisted yarn script lettering), ringside apparel, accessories, and 100% freehand custom wrestler likeness dolls.
+This repository combines the original `ShadowWalkerNC/hazel-the-dollmaker` project with the limited-drop site created on October 21, 2026. The existing GitHub repository remains canonical; the Sites Git remote is a deployment mirror, not a separate product.
 
-![Hazel The Dollmaker Official Logo](/public/hazel-logo.jpg)
+## What is included
 
----
+- Original Hazel logo, merchandise mockup artwork, and crochet icons.
+- Limited collectible, bundle, and signature-edition previews.
+- Collector signup, wrestler collaboration, and fan nomination forms backed by Cloudflare D1.
+- Instagram showcase entry point, about section, and FAQs.
+- Responsive layout, accessible forms, server validation, and consent recording.
 
-## 🛍️ Merchandise Store Features
+The site is in **prelaunch** mode. Prices are planning figures. Orders, payments, inventory promises, shipping discounts, countdown promotions, and automated email are not enabled.
 
-- **Official Logo Apparel:**
-  - **"Hazel The Dollmaker" Neon Rope Heavyweight Tee ($34)** — Screen-printed on 6.5oz heavyweight combed cotton with vintage ringside streetwear cut.
-  - **"No Patterns" Fleece Pullover Hoodie ($64)** — 450 GSM fleece with embroidered wrist yarn ball and full-back neon crochet wand logo hit.
-- **Custom Handcrafted Dolls (Made-To-Order Commissions):**
-  - **Custom Freehand Wrestler Likeness Doll ($135)** — 1-of-1 handcrafted likeness based on match photos. Custom ring gear, kickpads, boots, and hair fiber rooting.
-  - **Championship Belt Edition Doll ($175)** — Includes miniature hand-crocheted title belt with gold thread & sideplates.
-  - **Tag Team Champions Duo Set ($260)** — 2 matching likeness dolls with coordinating team gear & dual belts.
-- **Collectibles & Accessories:**
-  - **Official Holographic Sticker Pack ($14)** — Set of 5 weather-resistant holographic & vinyl decals.
-  - **Hazel's Crochet Star Wand Hard Enamel Pin ($16)** — Gold-plated enamel pin with purple glitter fill.
-  - **Handcrafted Championship Belt Keychain ($22)** — 100% hand-crocheted gold miniature strap.
-  - **"No Patterns" Heavyweight Canvas Ring Tote Bag ($28)**.
+## Development
 
----
+Use Node 22.13 or newer and pnpm.
 
-## 🛒 Complete E-Commerce & Shopping Experience
-
-1. **Interactive Shopping Bag & Drawer:**
-   - Real-time slide-over bag with item quantities, size selection, custom wrestler design notes, and line-item removals.
-   - Dynamic **Free Shipping Progress Bar** (Free US shipping unlocked on orders over $65).
-   - Promo Code Engine (`LIMITLESS10` for 10% off, `HAZELVIP` for 15% off).
-2. **Seamless Checkout System:**
-   - Full checkout modal with shipping address, customer email, and optional Instagram handle (for dispatch tags).
-   - Multi-option payment flow (Credit/Debit Card, Apple/Google Pay, or Direct Instagram Invoice).
-   - Instant order confirmation screen with Order ID (`#HDM-XXXXXX`), date, and itemized receipt.
-3. **"Order via Instagram DM" Integration:**
-   - One-click button in the cart that automatically formats all items, sizes, custom wrestler notes, and totals into an Instagram DM ready to send directly to [@hazel_the_dollmaker](https://www.instagram.com/hazel_the_dollmaker/).
-
----
-
-## 🤼 Wrestler Likeness Showcase & Instagram Hub
-
-- **"The Wrestler & The Doll" Dual Comparison:** Side-by-side match-up cards showcasing wrestlers holding Hazel's dolls (Nic Nemeth, Alec Price, Rip Byson, Channing Thomas, Dezmond Cole, etc.).
-- **"Put Her Instagram" Post Importer:** Paste any Instagram URL (`https://www.instagram.com/p/...` or `@hazel_the_dollmaker`) to dynamically feature new posts. Saves to `localStorage`!
-- **Interactive Ring Bell Sound:** Synthesized Web Audio API 3-bell ring gong.
-
----
-
-## 🚀 Running the App
-
-```bash
-# Start development server
-npm run dev
-
-# Build production bundle
-npm run build
+```sh
+pnpm install --frozen-lockfile
+pnpm dev
+pnpm exec tsc --noEmit
+pnpm build
 ```
 
-Open [http://localhost:5174/](http://localhost:5174/) in your browser.
+`app/page.tsx` is the single storefront. `components/brand/` contains retained artwork components. `app/api/interest/route.ts` handles validated form submissions; `db/schema.ts` and `drizzle/` define persistent storage. `scripts/` contains the supported build/runtime helpers. Do not bring back the old Node JSON-file server or browser-local customer order records.
+
+The server runtime requires the `DB` D1 binding. After building once, apply the migration to the local database before testing forms:
+
+```sh
+node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_goofy_kylun.sql
+```
+
+Hosted migrations are applied by the Sites publishing workflow. Hosted and local databases are separate.
+
+## Deployment
+
+The existing `.openai/hosting.json` points to the existing private Sites project. Do not create a second Site. Use the Sites source workflow to package and publish after GitHub changes are reviewed. GitHub pushes alone do not publish the Site automatically.
+
+Live review URL: https://hazels-handmade-collectibles.shadowwalkernc.chatgpt.site
+
+## Source consolidation
+
+See [docs/MERGE_NOTES.md](docs/MERGE_NOTES.md) for retained features, retired code, and the Windows checkout update process. The original source remains available in Git history and on `backup/pre-collectibles-merge-2026-10-21`.
