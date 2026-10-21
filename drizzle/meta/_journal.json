@@ -8,6 +8,13 @@
       "when": 1792602327446,
       "tag": "0000_goofy_kylun",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1792604538051,
+      "tag": "0001_outstanding_terrax",
+      "breakpoints": true
     }
   ]
 }

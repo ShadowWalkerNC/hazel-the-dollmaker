@@ -1,0 +1,61 @@
+CREATE TABLE `drops` (
+	`id` text PRIMARY KEY NOT NULL,
+	`wrestler_name` text NOT NULL,
+	`title` text NOT NULL,
+	`tagline` text NOT NULL,
+	`description` text NOT NULL,
+	`hero_image_url` text DEFAULT '/hazel-logo.jpg' NOT NULL,
+	`capacity_limit` integer DEFAULT 15 NOT NULL,
+	`dolls_claimed` integer DEFAULT 0 NOT NULL,
+	`ordering_window_start` text NOT NULL,
+	`ordering_window_end` text NOT NULL,
+	`estimated_ship_by_date` text NOT NULL,
+	`status` text DEFAULT 'preview' NOT NULL,
+	`created_at` text DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	`updated_at` text DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE `orders` (
+	`id` text PRIMARY KEY NOT NULL,
+	`customer_name` text NOT NULL,
+	`customer_email` text NOT NULL,
+	`customer_instagram` text,
+	`customer_phone` text,
+	`preferred_contact` text DEFAULT 'instagram' NOT NULL,
+	`shipping_address` text NOT NULL,
+	`items_json` text NOT NULL,
+	`doll_slots_reserved` integer DEFAULT 0 NOT NULL,
+	`subtotal` real NOT NULL,
+	`discount` real DEFAULT 0 NOT NULL,
+	`shipping` real DEFAULT 0 NOT NULL,
+	`total` real NOT NULL,
+	`promo_code` text,
+	`status` text DEFAULT 'pending_review' NOT NULL,
+	`notes_to_hazel` text,
+	`created_at` text DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	`updated_at` text DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE `products` (
+	`id` text PRIMARY KEY NOT NULL,
+	`name` text NOT NULL,
+	`tagline` text NOT NULL,
+	`description` text NOT NULL,
+	`price` real NOT NULL,
+	`original_price` real,
+	`category` text NOT NULL,
+	`state` text DEFAULT 'available' NOT NULL,
+	`badge` text,
+	`mockup_type` text,
+	`image_url` text DEFAULT '/hazel-logo.jpg' NOT NULL,
+	`drop_id` text,
+	`doll_capacity_usage` integer DEFAULT 0 NOT NULL,
+	`production_hours` real DEFAULT 0 NOT NULL,
+	`has_sizes` integer DEFAULT false NOT NULL,
+	`sizes_json` text DEFAULT '[]' NOT NULL,
+	`requires_custom_notes` integer DEFAULT false NOT NULL,
+	`custom_notes_placeholder` text,
+	`sort_order` integer DEFAULT 0 NOT NULL,
+	`created_at` text DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	`updated_at` text DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
